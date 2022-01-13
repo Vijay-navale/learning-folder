@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>Ripple button</title>
+  </head>
+  <body>
+    <div class="container">
+      <a href="#" class="btn">
+        <span>Explore</span>
+      </a>
+    </div>
+    <script>
+      const btn = document.querySelector(".btn");
+      let ripple;
+      btn.addEventListener("mouseenter", (e) => {
+        //basically getBoundingClientRect() will give you element position from viewport and clientX will give you exact mouse position from viewport
+        // console.log(e.target.getBoundingClientRect());
+        // console.log(e.clientX);
+        const left = e.clientX - e.target.getBoundingClientRect().left;
+        const top = e.clientY - e.target.getBoundingClientRect().top;
+        ripple = document.createElement("div");
+        ripple.classList.add("ripple");
+        ripple.style.left = `${left}px`;
+        ripple.style.top = `${top}px`;
+        console.log(ripple);
+        btn.prepend(ripple);
+      });
+      btn.addEventListener("mouseleave", (e) => {
+        btn.removeChild(ripple);
+      });
+    </script>
+  </body>
+</html>
