@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link type="text/css" rel="stylesheet" href="css/lightgallery-bundle.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="lightgallery">
+      <!-- main image -->
+      <a href="./images/aboutsec2img1.png" data-lg-size="493-605">
+        <!-- thumbimg -->
+        <img alt=".." src="./images/bannerimg.png" />
+      </a>
+      <a href="./images/aboutsec2img2.png" data-lg-size="493-605">
+        <img alt=".." src="./images/sisimg1.jpg" />
+      </a>
+      ...
+    </div>
+
+    <script src="js/lightgallery.min.js"></script>
+    <script type="text/javascript">
+      lightGallery(document.getElementById("lightgallery"), {
+        plugins: [lgZoom, lgThumbnail],
+        licenseKey: "0000-0000-000-0000",
+        speed: 500,
+      });
+    </script>
+  </body>
+</html>
