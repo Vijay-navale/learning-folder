@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="my_pdf_viewer">
+      <div id="canvas_container">
+        <canvas id="pdf_renderer"></canvas>
+      </div>
+      <div class="navigation_controls">
+        <button id="go_previous">Previous</button>
+        <input type="number" value="1" id="current_page" />
+        <button id="go_next">Next</button>
+      </div>
+      <div id="zoom_controls">
+        <button id="zoom_in">+</button>
+        <button id="zoom_out">-</button>
+      </div>
+    </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"
+      integrity="sha512-qa1o08MA0596eSNsnkRv5vuGloSKUhY09O31MY2OJpODjUVlaL0GOJJcyt7J7Z61FiEgHMgBkH04ZJ+vcuLs/w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      let canvas = document.getElementById("pdf_renderer");
+      let goPrevious = document.getElementById("go_previous");
+      let docUrl = "./sample.pdf";
+      let pdfDoc = null;
+      let currentPage = 1;
+      let scale = 2.5;
+      const renderPdf = () => {
+        pdfDoc.getPage(currentPage).then((page) => {
+          let ctx = canvas.getContext("2d");
+          let viewport = page.getViewport({ scale });
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          //rendering the page
+          page.render({
+            canvasContext: ctx,
+            viewport: viewport,
+          });
+        });
+      };
+      pdfjsLib.getDocument(docUrl).promise.then((pdff) => {
+        pdfDoc = pdff;
+        console.log(pdfDoc);
+        renderPdf();
+      });
+    </script>
+    <!-- <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script> -->
+    <!-- <script src="./app.js"></script> -->
+  </body>
+</html>
