@@ -2,20 +2,20 @@
     spread and rest parameter
 ===============*/
 var myObj = {};
-console.log(myObj);
+// console.log(myObj);
 Object.assign(myObj, { a: 1, b: 2 }, { z: 5 });
-console.log(myObj); //{a: 1, b: 2, z: 5}
+// console.log(myObj); //{a: 1, b: 2, z: 5}
 
 function sumOne(a, b) {
   return a + b;
 }
-console.log(sumOne(...[5, 4])); //spread
+// console.log(sumOne(...[5, 4])); //spread
 
 function sumTwo(...args) {
   //rest - always gives array
-  console.log(args);
+  // console.log(args);
 }
-console.log(sumTwo({}, {}));
+// console.log(sumTwo({}, {}));
 
 /*=============
     hoisting
@@ -24,5 +24,25 @@ console.log(sumTwo({}, {}));
 var x = 5;
 
 function getName() {
-  console.log("Namaste vijay");
+  // console.log("Namaste vijay");
 }
+
+/*=============
+    how functions executed
+===============*/
+var a = 1;
+aa();
+// console.log(a);
+function aa() {
+  var a = 10;
+  var b = 10;
+  //   console.log(a);
+}
+function aaa() {
+  var aaaaa = 100;
+  //   console.log(a);
+  //   console.log(this);
+}
+aaa();
+g = 5;
+// console.log(g);
