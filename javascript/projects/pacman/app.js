@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const grid = document.querySelector(".grid");
   const scoreDisplay = document.getElementById("score");
   const width = 28; //28x28 = 784 squares
+  let score = 0;
+  //starting position of pac-man
+  let pacmanCurrentIndex = 490;
   const layout = [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
@@ -41,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // 2 - ghost-lair
   // 3 - power-pellet
   // 4 - empty
-
   const squares = [];
 
   const createBoard = () => {
@@ -63,5 +65,109 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   createBoard();
-  //   console.log(squares);
+
+  squares[pacmanCurrentIndex].classList.add("pac-man");
+
+  const pacDotEaten = () => {
+    if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
+      score++;
+      scoreDisplay.textContent = score;
+      squares[pacmanCurrentIndex].classList.remove("pac-dot");
+    }
+  };
+  const moveGhost = (ghost) => {
+    const directions = [-1, +1, width, -width];
+    let direction = directions[Math.floor(Math.random() * directions.length)];
+    console.log(ghost.timerId);
+    ghost.timerId = setInterval(() => {
+      //if the next square your ghost is going to go in does not contain a wall and a ghost, you can go there
+      if (
+        !squares[ghost.currentIndex + direction].classList.contains("wall") &&
+        !squares[ghost.currentIndex + direction].classList.contains("ghost")
+      ) {
+        //ghost can go here
+        //remove all ghost related classes
+        squares[ghost.currentIndex].classList.remove(
+          ghost.className,
+          "ghost",
+          "scared-ghost"
+        );
+        //change the current index to the new safe square
+        ghost.currentIndex += direction;
+        //redraw the ghost in new safe space
+        squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
+      } else
+        direction = directions[Math.floor(Math.random() * directions.length)];
+    }, ghost.speed);
+  };
+  class Ghost {
+    constructor(className, startIndex, speed) {
+      this.className = className;
+      this.startIndex = startIndex;
+      this.speed = speed;
+      this.currentIndex = startIndex;
+      this.timerId = NaN;
+    }
+  }
+  const ghosts = [
+    new Ghost("blinky", 348, 250),
+    new Ghost("pinky", 376, 400),
+    new Ghost("inky", 351, 300),
+    new Ghost("clyde", 379, 500),
+  ];
+  ghosts.forEach((ghost) => {
+    squares[ghost.currentIndex].classList.add(ghost.className);
+    squares[ghost.currentIndex].classList.add("ghost");
+  });
+
+  ghosts.forEach((ghost) => moveGhost(ghost));
+
+  const movePacman = (e) => {
+    squares[pacmanCurrentIndex].classList.remove("pac-man");
+    switch (e.keyCode) {
+      case 37:
+        if (
+          pacmanCurrentIndex % width !== 0 &&
+          !squares[pacmanCurrentIndex - 1].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
+        )
+          pacmanCurrentIndex -= 1;
+
+        //check if the pacman is in the left exit
+        if (squares[pacmanCurrentIndex - 1] === squares[363]) {
+          pacmanCurrentIndex = 391;
+        }
+        break;
+      case 38:
+        if (
+          pacmanCurrentIndex - width >= 0 &&
+          !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex - width].classList.contains("ghost-lair")
+        )
+          pacmanCurrentIndex -= width;
+        break;
+      case 39:
+        if (
+          pacmanCurrentIndex % width < width - 1 &&
+          !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex + 1].classList.contains("ghost-lair")
+        )
+          pacmanCurrentIndex += 1;
+        if (squares[pacmanCurrentIndex + 1] === squares[392]) {
+          pacmanCurrentIndex = 364;
+        }
+        break;
+      case 40:
+        if (
+          pacmanCurrentIndex + width < width * width &&
+          !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")
+        )
+          pacmanCurrentIndex += width;
+        break;
+    }
+    squares[pacmanCurrentIndex].classList.add("pac-man");
+    pacDotEaten();
+  };
+  document.addEventListener("keyup", movePacman);
 });
